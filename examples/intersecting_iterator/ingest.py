@@ -14,6 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 from pyaccumulo import Accumulo, Mutation, Range
 from pyaccumulo.iterators import *
 
@@ -27,7 +34,7 @@ import os
 NUM_SHARDS=4
 
 def usage(msg=None):
-    print "Usage: %s <table> <dir1> [<dir2> <dir3> ...]"%sys.argv[0]
+    print("Usage: %s <table> <dir1> [<dir2> <dir3> ...]"%sys.argv[0])
     sys.exit(1)
 
 def get_uuid(filePath):
@@ -63,7 +70,7 @@ except:
 conn = Accumulo(host=settings.HOST, port=settings.PORT, user=settings.USER, password=settings.PASSWORD)
 
 if not conn.table_exists(table):
-    print "Creating table: %s"%table
+    print("Creating table: %s"%table)
     conn.create_table(table)
 
 wr = conn.create_batch_writer(table)
@@ -72,7 +79,7 @@ for indir in input_dirs:
     for root, subFolders, files in os.walk(indir):
         for filename in files:
             filePath = os.path.join(root, filename)
-            print "indexing file %s"%filePath
+            print("indexing file %s"%filePath)
             uuid = get_uuid(filePath)
             with open( filePath, 'r' ) as f:
                 write_mutations(wr, get_shard(uuid), uuid, filePath, get_tokens(f))

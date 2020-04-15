@@ -2,6 +2,13 @@
 # -*- coding: utf-8 -*-
 #
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 import os
 import sys
 import fnmatch
@@ -32,14 +39,14 @@ class rpm(Command):
             if status:
                 raise RuntimeError("RPM build failed")
 
-            print ""
-            print "RPM built"
+            print("")
+            print("RPM built")
         else:
-            print """
+            print("""
 `setup.py rpm` is not supported for this version of Python.
 
 Please ask in the user forums for help.
-"""
+""")
 
 class doc(Command):
     description = "generate or test documentation"
@@ -72,15 +79,15 @@ class doc(Command):
             if status:
                 raise RuntimeError("documentation step '%s' failed" % mode)
 
-            print ""
-            print "Documentation step '%s' performed, results here:" % mode
-            print "   %s/" % path
+            print("")
+            print("Documentation step '%s' performed, results here:" % mode)
+            print("   %s/" % path)
         else:
-            print """
+            print("""
 `setup.py doc` is not supported for this version of Python.
 
 Please ask in the user forums for help.
-"""
+""")
 
 class PyTest(Command):
     '''run py.test'''
@@ -108,7 +115,7 @@ class PyTest(Command):
         # reload sys.path for any new libraries installed
         import site
         site.main()
-        print sys.path
+        print(sys.path)
         # use pytest to run tests
         pytest = __import__('pytest')
         exitcode = pytest.main(['--cov', 'pyaccumulo', '--cov-report', 'term', '-vvs', 'tests'])
