@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import *
 from pyaccumulo import Accumulo, Mutation, Range
 from pyaccumulo.iterators import *
 
@@ -48,6 +56,6 @@ regex2 = RegExFilter(priority=22, val_regex='.*patent', match_substring=True, na
 regex3 = RegExFilter(priority=23, val_regex='have made', match_substring=True, name="RegExFilter3")
 
 for e in conn.batch_scan(table, cols=[["e"]], iterators=[regex1, regex2, regex3]):
-    print e
+    print(e)
 
 conn.close()

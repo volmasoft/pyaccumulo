@@ -14,20 +14,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from builtins import *
 from pyaccumulo import Accumulo, Mutation, Range
-import settings
 
 table = "pythontest"
 
-conn = Accumulo(host=settings.HOST, port=settings.PORT, user=settings.USER, password=settings.PASSWORD)
+conn = Accumulo(host='localhost', port=42424, user='root', password='secret')
 
 if conn.table_exists(table):
     conn.delete_table(table)
 
 conn.create_table(table)
+
+print(conn.list_tables())
+
 wr = conn.create_batch_writer(table)
 
-print "Ingesting some data ..."
+print("Ingesting some data ...")
 for num in range(1, 100):
     label = '%03d'%num
     mut = Mutation('r_%s'%label)
@@ -37,12 +47,16 @@ for num in range(1, 100):
 wr.close()
 
 
-print "Rows 001 through 003 ..."
-for entry in conn.scan(table, scanrange=Range(srow='r_001', erow='r_003'), cols=[]):
-    print entry
-
-print "Rows 001 and 011 ..."
-for entry in conn.batch_scan(table, scanranges=[Range(srow='r_001', erow='r_001'), Range(srow='r_011', erow='r_011')]):
-    print entry
-
+print("Rows 001 through 003 ...")
+try:
+    for entry in conn.scan(table, scanrange=Range(srow='r_001', erow='r_003'), cols=[]):
+        print(entry)
+except:
+    pass
+print("Rows 001 and 011 ...")
+try:
+    for entry in conn.batch_scan(table, scanranges=[Range(srow='r_001', erow='r_001'), Range(srow='r_011', erow='r_011')]):
+        print(entry)
+except:
+    pass
 conn.close()

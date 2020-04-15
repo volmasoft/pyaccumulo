@@ -14,6 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
 from pyaccumulo import Accumulo, Mutation, Range
 from pyaccumulo.iterators import *
 
@@ -27,15 +34,15 @@ conn = Accumulo(host=settings.HOST, port=settings.PORT, user=settings.USER, pass
 
 table = sys.argv[1]
 if not conn.table_exists(table):
-    print "Table '%s' does not exist."%table
+    print("Table '%s' does not exist."%table)
     sys.exit(1)
 
 search_terms = [term.lower() for term in sys.argv[2:] if len(term) > 3]
 
 if len(search_terms) < 2:
-    print "More than one term of length > 3 is required for this example"
+    print("More than one term of length > 3 is required for this example")
     sys.exit(1)
 
 for e in conn.batch_scan(table, iterators=[IndexedDocIterator(priority=21, terms=search_terms)]):
-    print e.val
+    print(e.val)
 conn.close()
